@@ -56,8 +56,6 @@ export function addListeners(useCases: UseCases): () => void {
   }
   const throttledReposition = throttle(useCases.repositionAll, 16)
   const throttledResize = throttle(useCases.resizeAll, 16)
-  const showOnHover = hoverHandler(useCases.hover)
-  const hideOnHover = hoverHandler(useCases.unhover)
 
   const controller = new AbortController()
   const options = { signal: controller.signal }
@@ -68,8 +66,6 @@ export function addListeners(useCases: UseCases): () => void {
   onDocument('gestureend', throttledReposition, options)
   onWindow('scroll', throttledReposition, options)
   onWindow('resize', throttledResize, options)
-  delegate('mouseover', SELECTOR_FOOTNOTE, showOnHover, options)
-  delegate('mouseout', SELECTOR_FOOTNOTE, hideOnHover, options)
 
   return () => {
     controller.abort()

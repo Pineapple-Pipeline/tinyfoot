@@ -2,14 +2,9 @@ type ActionCallback<T> = (popover: T, button: T) => void
 
 export type UseCaseSettings<T> = Readonly<{
   activateCallback?: ActionCallback<T>
-  activateDelay: number
-  activateOnHover: boolean
   allowMultiple: boolean
   dismissCallback?: ActionCallback<T>
-  dismissDelay: number
-  dismissOnUnhover: boolean
   dismissOnDocumentTouch: boolean
-  hoverDelay: number
 }>
 
 export type Footnote<T> = Readonly<{
@@ -26,18 +21,15 @@ export type Footnote<T> = Readonly<{
 }>
 
 export type FootnoteAction = (id: string) => void
-type DelayedFootnoteAction = (id: string, delay: number) => void
 
 export type UseCases = Readonly<{
-  activate: DelayedFootnoteAction
-  dismiss: DelayedFootnoteAction
+  activate: FootnoteAction
+  dismiss: FootnoteAction
   dismissAll: () => void
   touchOutside: () => void
-  hover: FootnoteAction
   repositionAll: () => void
   resizeAll: () => void
   toggle: FootnoteAction
-  unhover: FootnoteAction
   unmount: () => void
 }>
 
@@ -50,27 +42,25 @@ export function createUseCases<T>(
   { footnotes, unmount }: Adapter<T>,
   settings: UseCaseSettings<T>,
 ): UseCases {
-  let hovered: string | null
-
-  const dismiss = (delay: number) => (footnote: Footnote<T>) => {
+  const dismiss = () => (footnote: Footnote<T>) => {
     if (footnote.isReady()) {
       footnote.dismiss(settings.dismissCallback)
-      setTimeout(footnote.remove, delay)
+      setTimeout(footnote.remove)
     }
   }
 
-  const activate = (delay: number) => (footnote: Footnote<T>) => {
+  const activate = () => (footnote: Footnote<T>) => {
     if (!settings.allowMultiple) {
       footnotes
         .filter((current) => current.id !== footnote.id)
-        .forEach(dismiss(settings.dismissDelay))
+        .forEach(dismiss())
     }
 
     if (footnote.isReady()) {
       footnote.activate(settings.activateCallback)
       footnote.reposition()
       footnote.resize()
-      setTimeout(footnote.ready, delay)
+      setTimeout(footnote.ready)
     }
   }
 
@@ -81,12 +71,12 @@ export function createUseCases<T>(
     }
   }
 
-  const dismissAll = () => footnotes.forEach(dismiss(settings.dismissDelay))
+  const dismissAll = () => footnotes.forEach(dismiss())
 
   return {
-    activate: (id, delay) => ifFound(activate(delay))(id),
+    activate: (id) => ifFound(activate())(id),
 
-    dismiss: (id, delay) => ifFound(dismiss(delay))(id),
+    dismiss: (id) => ifFound(dismiss())(id),
 
     dismissAll,
 
@@ -102,31 +92,9 @@ export function createUseCases<T>(
 
     toggle: ifFound((footnote) =>
       footnote.isActive()
-        ? dismiss(settings.dismissDelay)(footnote)
-        : activate(settings.activateDelay)(footnote),
+        ? dismiss()(footnote)
+        : activate()(footnote),
     ),
-
-    hover: ifFound((footnote) => {
-      hovered = footnote.id
-      if (settings.activateOnHover && !footnote.isActive()) {
-        activate(settings.hoverDelay)(footnote)
-      }
-    }),
-
-    unhover: ifFound((footnote) => {
-      if (footnote.id === hovered) {
-        hovered = null
-      }
-      if (settings.dismissOnUnhover) {
-        setTimeout(
-          () =>
-            footnotes
-              .filter((f) => f.id !== hovered)
-              .forEach(dismiss(settings.dismissDelay)),
-          settings.hoverDelay,
-        )
-      }
-    }),
 
     unmount,
   }

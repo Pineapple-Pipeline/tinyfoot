@@ -4,8 +4,8 @@ import { DEFAULT_SETTINGS, type Settings } from './settings'
 import { createUseCases } from './use-cases'
 
 type Littlefoot = Readonly<{
-  activate: (id: string, delay?: number) => void
-  dismiss: (id?: string, delay?: number) => void
+  activate: (id: string) => void
+  dismiss: (id?: string) => void
   unmount: () => void
   getSetting: <K extends keyof Settings>(key: K) => Settings[K]
   updateSetting: <K extends keyof Settings>(key: K, value: Settings[K]) => void
@@ -17,15 +17,15 @@ export function littlefoot(userSettings: Partial<Settings> = {}): Littlefoot {
   const removeListeners = addListeners(useCases)
 
   return {
-    activate(id, delay = settings.activateDelay) {
-      useCases.activate(id, delay)
+    activate(id) {
+      useCases.activate(id)
     },
 
-    dismiss(id, delay = settings.dismissDelay) {
+    dismiss(id) {
       if (id === undefined) {
         useCases.dismissAll()
       } else {
-        useCases.dismiss(id, delay)
+        useCases.dismiss(id)
       }
     },
 

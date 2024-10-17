@@ -9,17 +9,12 @@ import type { UseCaseSettings } from './use-cases'
 export type Settings = HTMLAdapterSettings & UseCaseSettings<HTMLElement>
 
 export const DEFAULT_SETTINGS: Settings = {
-  activateDelay: 100,
-  activateOnHover: false,
   allowDuplicates: true,
   allowMultiple: false,
   anchorParentSelector: 'sup',
   anchorPattern: /(fn|footnote|note)[:\-_\d]/gi,
-  dismissDelay: 100,
-  dismissOnUnhover: false,
   dismissOnDocumentTouch: true,
   footnoteSelector: 'li',
-  hoverDelay: 250,
   numberResetSelector: '',
   scope: '',
   contentTemplate: `<aside class="littlefoot__popover" id="fncontent:<% id %>"><div class="${CLASS_WRAPPER}"><div class="${CLASS_CONTENT}"><% content %></div></div><div class="${CLASS_TOOLTIP}"></div></aside>`,
