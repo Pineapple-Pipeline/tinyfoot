@@ -1,16 +1,16 @@
 @custom-media --breakpoint (width < 768px);
 
 .littlefoot {
-  --button-background-color: #949494;
+  --button-background-color: #df4646;
   --button-text-color: #fff;
-  --button-active-background-color: #3f3f3f;
+  --button-active-background-color: #71e85f;
   --button-active-text-color: #fff;
   --button-border-radius: 0.5rem;
   --button-height: 1rem;
   --button-margin: 0 0.1rem;
   --button-padding: 0 0.6rem;
   --button-transition: background-color 0.25s ease, color 0.25s ease;
-  --popover-background-color: #f5f5f5;
+  --popover-background-color: #b28ef3;
   --popover-text-color: #111;
   --popover-border: 1px solid #949494;
   --popover-border-radius: 0.5rem;
@@ -61,9 +61,7 @@
 }
 
 .littlefoot__popover {
-  border: var(--popover-border);
   border-radius: var(--popover-border-radius);
-  box-shadow: var(--popover-shadow);
   margin: calc(var(--popover-tooltip-size) + var(--button-height)) 0;
   max-width: var(--popover-max-width);
   position: absolute;
@@ -103,7 +101,7 @@
   line-height: var(--popover-line-height, normal);
   max-height: var(--popover-max-height);
   overflow: auto;
-  padding: var(--popover-vertical-padding) var(--popover-horizontal-padding);
+  padding: 0 0 0 var(--popover-horizontal-padding);
   width: 100%;
 
   & img {
@@ -138,26 +136,6 @@
   }
 }
 
-.littlefoot__tooltip {
-  --tooltip-margin: calc(-1 * var(--popover-tooltip-size));
-
-  background-color: var(--popover-background-color);
-  border: var(--popover-border);
-  box-shadow: var(--popover-shadow);
-  height: calc(2 * var(--popover-tooltip-size));
-  margin-left: var(--tooltip-margin);
-  position: absolute;
-  transform: rotate(45deg);
-  width: calc(2 * var(--popover-tooltip-size));
-}
-
-.is-below .littlefoot__tooltip {
-  top: var(--tooltip-margin);
-}
-
-.is-above .littlefoot__tooltip {
-  bottom: var(--tooltip-margin);
-}
 
 @media (--breakpoint) {
   .littlefoot__popover {
